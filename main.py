@@ -2,9 +2,10 @@ import traceback
 from flask import Flask, request, render_template
 from database_utils import db, Deal, get_deals, add_deal
 from peewee import IntegrityError
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 db.connect()
 db.create_tables([Deal])
 
