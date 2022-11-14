@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>Create New Deal</title>
+</head>
+<body class="text-center">
+<h1>Create</h1>
+
+<form onsubmit="handleSubmit(event)">
+    <div class="w-25 m-auto mt-5">
+        <div class="mb-3">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" name="companyName"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Relationship Manager</label>
+            <input type="text" class="form-control" name="relationshipManager"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Deal Amount</label>
+            <input type="text" class="form-control" name="dealAmount"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
+
+<a class="btn btn-secondary btn-sm mt-5" href="{{url_for('home')}}">Go Back</a>
+
+<script>
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            const form = e.target;
+            const companyName = form["companyName"].value;
+            const relationshipManager = form["relationshipManager"].value;
+            const dealAmount = form["dealAmount"].value;
+
+            if (isNaN(dealAmount)) {
+                return alert("Deal Amount must be a number.")
+            }
+
+            const newDeal = {
+                companyName: companyName,
+                relationshipManager: relationshipManager,
+                dealAmount: dealAmount
+            }
+
+            try {
+            const rawResponse = await fetch('http://localhost:5000/api/deals', {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/json",
+                    'Accept': "*/*",
+                },
+                body: JSON.stringify(newDeal)
+            });
+
+            const responseData = await rawResponse.json();
+
+            if (responseData.success == false) {
+                console.log(responseData);
+                return alert(responseData.error)
+            }
+
+            window.location.href = "/";
+            } catch (err) {
+                alert(err.message);
+            }
+
+        }
+
+</script>
+
+</body>
+</html>
