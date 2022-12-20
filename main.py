@@ -1,6 +1,6 @@
 import traceback
 from flask import Flask, request, render_template
-from database_utils import db, Deal, get_deals, add_deal
+from database_utils import db, Deal, get_deals, add_deal, delete_deal
 from peewee import IntegrityError
 from flask_cors import CORS
 
@@ -22,18 +22,27 @@ def api_deals():
         data = request.json
         if not data["companyName"] or not data["relationshipManager"] or not data["dealAmount"]:
             return {
-                       "success": False,
-                       "error": "Please include companyName, relationshipManager, and dealAmount in request json body."
-                   }, 400
+                "success": False,
+                "error": "Please include companyName, relationshipManager, and dealAmount in request json body."
+            }, 400
         try:
-            new_deal = add_deal(data["companyName"], data["relationshipManager"], data["dealAmount"])
+            new_deal = add_deal(
+                data["companyName"], data["relationshipManager"], data["dealAmount"])
             return {"success": True, "newDealId": new_deal.id}, 200
         except IntegrityError:
             traceback.print_exc()
             return {"success": False, "error": traceback.format_exc()}, 400
 
 
+@app.route('/api/deals/delete/<deal_id>', methods=["DELETE"])
+def delete_deal(deal_id):
+    try:
+        res = delete_deal(deal_id)
+    except:
+        pass  # Finish this....
+
 # UI Routes
+
 
 @app.route('/')
 def home():
