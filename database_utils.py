@@ -1,4 +1,5 @@
 from peewee import *
+import traceback
 
 db = SqliteDatabase('./database/main.db')
 
@@ -34,8 +35,6 @@ def add_deal(company_name, relationship_manager, deal_amount):
     return new_deal
 
 
-def delete_deal(deal_id):
-    result = Deal.delete().where(Deal.id == deal_id).execute()
-    return result
-
-
+def delete_deal(deal_id: int):
+    res = Deal.delete().where(Deal.id == deal_id).execute()
+    return res

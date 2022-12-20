@@ -35,11 +35,13 @@ def api_deals():
 
 
 @app.route('/api/deals/delete/<deal_id>', methods=["DELETE"])
-def delete_deal(deal_id):
+def delete_deal_api(deal_id):
     try:
         res = delete_deal(deal_id)
+        return {"success": True, "result": res}, 200
     except:
-        pass  # Finish this....
+        return {"success": False, "error": traceback.format_exc()}, 400
+
 
 # UI Routes
 

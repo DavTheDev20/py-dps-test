@@ -31,6 +31,7 @@
           <th>Company Name</th>
           <th>Relationship Manager</th>
           <th>Deal Amount</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -41,7 +42,13 @@
           <td>{{deal["relationshipManager"]}}</td>
           <td>{{"${:,.2f}".format(deal["dealAmount"])}}</td>
           <td>
-            <button>Delete</button>
+            <button
+              class="btn btn-secondary btn-sm"
+              value="{{deal['id']}}"
+              onclick="deleteDeal()"
+            >
+              Delete
+            </button>
           </td>
         </tr>
         {% endfor %}
@@ -51,6 +58,7 @@
         <td></td>
         <td></td>
         <td>{{"${:,.2f}".format(deals_total)}}</td>
+        <td></td>
       </tfoot>
     </table>
 
@@ -60,5 +68,25 @@
       integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function deleteDeal() {
+        const dealId = event.target.value;
+
+        fetch(`http://localhost:5000/api/deals/delete/${dealId}`, {
+          method: 'DELETE',
+        })
+          .then((res) => {
+            if (res.status !== 200) {
+              console.error(res);
+              return alert('Something went wrong');
+            }
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.error(err);
+            return alert('Something went wrong...');
+          });
+      }
+    </script>
   </body>
 </html>
